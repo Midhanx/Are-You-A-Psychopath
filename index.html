@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Are You a Psychopath?</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #09090b;
+    --surface: #121216;
+    --surface-hover: #19191e;
+
+    --text: #f2f2f2;
+    --muted: #85858d;
+    --line: #28282f;
+
+    --red: #b51f2b;
+    --red-bright: #d72b38;
+    --red-dark: #64141a;
+}
+
+
+/* =========================================
+   BASE
+========================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+
+/* subtle red atmosphere */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(181, 31, 43, .055),
+            transparent 35%
+        );
+
+    z-index: -1;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+.page {
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px 20px;
+}
+
+.container {
+    width: min(760px, 100%);
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo {
+    position: fixed;
+
+    top: 25px;
+
+    left: 30px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    color: #77777f;
+
+    z-index: 10;
+}
+
+.logo::first-letter {
+    color: var(--red-bright);
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+#intro {
+    text-align: center;
+
+    animation: appear .8s ease;
+}
+
+.eyebrow {
+    color: var(--red-bright);
+
+    font-size: 11px;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 30px;
+}
+
+.title {
+    font-size: clamp(55px, 10vw, 105px);
+
+    line-height: .88;
+
+    letter-spacing: -6px;
+
+    margin: 0;
+
+    font-weight: 800;
+}
+
+.title span {
+    display: block;
+}
+
+.title span:last-child {
+    color: #dedee2;
+}
+
+.subtitle {
+    color: var(--muted);
+
+    max-width: 480px;
+
+    margin: 35px auto 0;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+}
+
+.start-button {
+    margin-top: 40px;
+
+    border: 1px solid var(--red);
+
+    background: var(--red);
+
+    color: white;
+
+    padding: 15px 27px;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+
+    font-weight: 600;
+}
+
+.start-button:hover {
+    background: var(--red-bright);
+
+    border-color: var(--red-bright);
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 35px
+        rgba(181, 31, 43, .2);
+}
+
+.warning {
+    margin-top: 28px;
+
+    color: #55555d;
+
+    font-size: 10px;
+
+    letter-spacing: .5px;
+}
+
+
+/* =========================================
+   QUIZ
+========================================= */
+
+#quiz {
+    display: none;
+}
+
+.quiz-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.quiz-label {
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    color: var(--muted);
+
+    text-transform: uppercase;
+}
+
+.question-number {
+    color: var(--red-bright);
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   PROGRESS
+========================================= */
+
+.progress {
+    height: 2px;
+
+    background: var(--line);
+
+    width: 100%;
+
+    margin-bottom: 65px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--red-dark),
+            var(--red-bright)
+        );
+
+    transition: width .4s ease;
+}
+
+
+/* =========================================
+   QUESTION
+========================================= */
+
+.question-area {
+    animation: questionIn .45s ease;
+}
+
+.question {
+    font-size: clamp(32px, 5vw, 58px);
+
+    line-height: 1.05;
+
+    letter-spacing: -3px;
+
+    font-weight: 750;
+
+    margin: 0 0 45px;
+}
+
+
+/* =========================================
+   OPTIONS
+========================================= */
+
+.options {
+    display: grid;
+
+    gap: 10px;
+}
+
+.option {
+    width: 100%;
+
+    text-align: left;
+
+    padding: 21px 23px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+
+    color: var(--text);
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+.option:hover {
+    background: var(--surface-hover);
+
+    border-color: #55555e;
+
+    transform: translateX(4px);
+}
+
+.option-letter {
+    width: 28px;
+
+    height: 28px;
+
+    border: 1px solid #36363d;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    flex-shrink: 0;
+
+    transition: .2s ease;
+}
+
+.option:hover .option-letter {
+    border-color: var(--red);
+
+    color: var(--red-bright);
+}
+
+.option-text {
+    font-size: 15px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   SELECTED ANSWER
+========================================= */
+
+.option.selected {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(181,31,43,.16),
+            rgba(181,31,43,.04)
+        );
+
+    border-color: var(--red);
+
+    box-shadow:
+        0 0 25px
+        rgba(181,31,43,.08);
+}
+
+.option.selected .option-letter {
+    background: var(--red);
+
+    border-color: var(--red);
+
+    color: white;
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.navigation {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+.nav-button {
+    margin: 0;
+
+    flex: 1;
+
+    padding: 14px 20px;
+
+    border: 1px solid var(--line);
+
+    background: transparent;
+
+    color: var(--text);
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border .2s ease,
+        transform .2s ease;
+}
+
+.nav-button:hover:not(:disabled) {
+    background: var(--surface-hover);
+
+    border-color: #44444c;
+
+    transform: translateY(-2px);
+}
+
+.nav-button:disabled {
+    opacity: .25;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+#nextButton {
+    background: var(--surface);
+}
+
+#nextButton:hover:not(:disabled) {
+    border-color: var(--red);
+
+    color: var(--red-bright);
+}
+
+
+/* =========================================
+   RESULT
+========================================= */
+
+#result {
+    display: none;
+
+    text-align: center;
+
+    animation: appear .8s ease;
+}
+
+.result-label {
+    color: var(--red-bright);
+
+    text-transform: uppercase;
+
+    letter-spacing: 4px;
+
+    font-size: 11px;
+}
+
+.result-title {
+    font-size: clamp(55px, 10vw, 100px);
+
+    line-height: .9;
+
+    letter-spacing: -6px;
+
+    margin: 25px 0;
+
+    font-weight: 800;
+}
+
+.score {
+    font-size: 20px;
+
+    color: var(--muted);
+}
+
+.score strong {
+    color: var(--red-bright);
+
+    font-size: 40px;
+}
+
+.result-description {
+    max-width: 570px;
+
+    margin: 35px auto 0;
+
+    color: #a0a0a8;
+
+    line-height: 1.8;
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   SCORE METER
+========================================= */
+
+.meter {
+    width: min(500px, 90%);
+
+    height: 4px;
+
+    background: var(--line);
+
+    margin: 45px auto 0;
+
+    position: relative;
+}
+
+.meter-fill {
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--red-dark),
+            var(--red-bright)
+        );
+
+    transition: width 1.3s ease;
+}
+
+.meter-labels {
+    width: min(500px, 90%);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin: 10px auto 0;
+
+    font-size: 10px;
+
+    color: #55555d;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   RESTART
+========================================= */
+
+.restart {
+    margin-top: 45px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    border: 1px solid var(--line);
+
+    padding: 13px 23px;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.restart:hover {
+    background: var(--surface);
+
+    border-color: var(--red);
+
+    color: var(--red-bright);
+}
+
+
+/* =========================================
+   DISCLAIMER
+========================================= */
+
+.disclaimer {
+    margin: 40px auto 0;
+
+    max-width: 500px;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+    color: #55555d;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes appear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+@keyframes questionIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateX(0);
+    }
+
+}
+
+
+@keyframes questionBack {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateX(0);
+    }
+
+}
+
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width: 600px) {
+
+    .page {
+        padding:
+            25px 18px;
+    }
+
+    .logo {
+        left: 20px;
+
+        top: 20px;
+    }
+
+    .title {
+        letter-spacing: -4px;
+    }
+
+    .question {
+        letter-spacing: -2px;
+
+        font-size: 34px;
+    }
+
+    .progress {
+        margin-bottom: 45px;
+    }
+
+    .option {
+        padding: 18px;
+    }
+
+    .option-text {
+        font-size: 14px;
+    }
+
+    .result-title {
+        letter-spacing: -4px;
+    }
+
+    .navigation {
+        gap: 8px;
+    }
+
+    .nav-button {
+        padding:
+            13px 10px;
+
+        font-size: 12px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="logo">
+    PSYCHOTEST
+</div>
+
+
+<main class="page">
+
+<div class="container">
+
+
+<!-- =====================================
+     INTRO
+===================================== -->
+
+<section id="intro">
+
+    <div class="eyebrow">
+        A psychological curiosity
+    </div>
+
+
+    <h1 class="title">
+
+        <span>ARE YOU</span>
+
+        <span>A PSYCHOPATH?</span>
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Fifteen uncomfortable questions.
+        No right answers.
+        No wrong answers.
+
+        <br>
+
+        Just choose what feels closest to you.
+
+    </p>
+
+
+    <button
+        class="start-button"
+        onclick="startQuiz()">
+
+        BEGIN →
+
+    </button>
+
+
+    <div class="warning">
+
+        FOR ENTERTAINMENT ONLY ·
+        NOT A CLINICAL TEST
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     QUIZ
+===================================== -->
+
+<section id="quiz">
+
+
+    <div class="quiz-header">
+
+        <div class="quiz-label">
+            THE TEST
+        </div>
+
+
+        <div
+            class="question-number"
+            id="questionNumber">
+
+            01 / 15
+
+        </div>
+
+    </div>
+
+
+    <div class="progress">
+
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+
+    <div
+        class="question-area"
+        id="questionArea">
+
+
+        <h2
+            class="question"
+            id="question">
+        </h2>
+
+
+        <div
+            class="options"
+            id="options">
+        </div>
+
+
+        <div class="navigation">
+
+            <button
+                class="nav-button"
+                id="prevButton"
+                onclick="previousQuestion()">
+
+                ← PREVIOUS
+
+            </button>
+
+
+            <button
+                class="nav-button"
+                id="nextButton"
+                onclick="nextQuestion()">
+
+                NEXT →
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     RESULT
+===================================== -->
+
+<section id="result">
+
+
+    <div class="result-label">
+
+        YOUR RESULT
+
+    </div>
+
+
+    <h2
+        class="result-title"
+        id="resultTitle">
+
+    </h2>
+
+
+    <div class="score">
+
+        PSYCHOPATHY-LIKE SCORE
+
+        <br>
+
+        <strong id="score">
+            0%
+        </strong>
+
+    </div>
+
+
+    <p
+        class="result-description"
+        id="resultDescription">
+
+    </p>
+
+
+    <div class="meter">
+
+        <div
+            class="meter-fill"
+            id="meterFill">
+        </div>
+
+    </div>
+
+
+    <div class="meter-labels">
+
+        <span>
+            Empathetic
+        </span>
+
+        <span>
+            Cold / Detached
+        </span>
+
+    </div>
+
+
+    <button
+        class="restart"
+        onclick="location.reload()">
+
+        TAKE IT AGAIN
+
+    </button>
+
+
+    <div class="disclaimer">
+
+        This quiz is a fictional personality
+        experience. It cannot diagnose psychopathy
+        or any other mental-health condition.
+
+        Real psychological assessments require
+        qualified professionals and validated methods.
+
+    </div>
+
+
+</section>
+
+
+</div>
+
+</main>
+
+
+
+<script>
+
+
+/* =========================================
+   QUESTIONS
+========================================= */
+
+const questions = [
+
+    {
+        question:
+        "You find a wallet on the ground containing cash and an ID. What do you do?",
+
+        options: [
+
+            {
+                text:
+                "Try to return it to its owner.",
+                score: 0
+            },
+
+            {
+                text:
+                "Take the cash but leave the wallet somewhere nearby.",
+                score: 3
+            },
+
+            {
+                text:
+                "Keep it. Finding it was their problem.",
+                score: 5
+            },
+
+            {
+                text:
+                "Look through it first, then decide.",
+                score: 2
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "Someone you strongly dislike suddenly needs your help. What do you do?",
+
+        options: [
+
+            {
+                text:
+                "Help them anyway.",
+                score: 0
+            },
+
+            {
+                text:
+                "Help, but reluctantly.",
+                score: 1
+            },
+
+            {
+                text:
+                "Only help if I get something in return.",
+                score: 4
+            },
+
+            {
+                text:
+                "Ignore them.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You accidentally break something expensive that belongs to someone else.",
+
+        options: [
+
+            {
+                text:
+                "Immediately tell them.",
+                score: 0
+            },
+
+            {
+                text:
+                "Try to fix it before telling them.",
+                score: 1
+            },
+
+            {
+                text:
+                "Pretend I don't know what happened.",
+                score: 4
+            },
+
+            {
+                text:
+                "Leave and hope nobody notices.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "A friend tells you a secret and asks you not to tell anyone.",
+
+        options: [
+
+            {
+                text:
+                "I keep it private.",
+                score: 0
+            },
+
+            {
+                text:
+                "I might tell one person I completely trust.",
+                score: 2
+            },
+
+            {
+                text:
+                "I'll probably tell someone if it's interesting.",
+                score: 4
+            },
+
+            {
+                text:
+                "Their secret isn't my responsibility.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "Someone insults you in front of a group of people.",
+
+        options: [
+
+            {
+                text:
+                "Ignore it.",
+                score: 0
+            },
+
+            {
+                text:
+                "Make a joke and move on.",
+                score: 1
+            },
+
+            {
+                text:
+                "Insult them back.",
+                score: 3
+            },
+
+            {
+                text:
+                "Remember it and wait for an opportunity later.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You realize you can get away with something wrong because nobody will ever know.",
+
+        options: [
+
+            {
+                text:
+                "I still wouldn't do it.",
+                score: 0
+            },
+
+            {
+                text:
+                "I'd think about it, but probably wouldn't.",
+                score: 1
+            },
+
+            {
+                text:
+                "If nobody gets hurt, maybe.",
+                score: 3
+            },
+
+            {
+                text:
+                "If there are no consequences, why not?",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "A stranger asks you for help while you're already late.",
+
+        options: [
+
+            {
+                text:
+                "Stop and help.",
+                score: 0
+            },
+
+            {
+                text:
+                "Help quickly if I can.",
+                score: 1
+            },
+
+            {
+                text:
+                "Apologize and keep going.",
+                score: 2
+            },
+
+            {
+                text:
+                "Ignore them completely.",
+                score: 4
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You win an argument and realize the other person is genuinely upset.",
+
+        options: [
+
+            {
+                text:
+                "Try to make them feel better.",
+                score: 0
+            },
+
+            {
+                text:
+                "Give them some space.",
+                score: 1
+            },
+
+            {
+                text:
+                "Feel satisfied that I won.",
+                score: 3
+            },
+
+            {
+                text:
+                "I don't really care how they feel.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "Someone you care about achieves something you wanted for yourself.",
+
+        options: [
+
+            {
+                text:
+                "I'm genuinely happy for them.",
+                score: 0
+            },
+
+            {
+                text:
+                "I'm happy, but a little jealous.",
+                score: 1
+            },
+
+            {
+                text:
+                "I compare myself to them.",
+                score: 3
+            },
+
+            {
+                text:
+                "I secretly want them to fail.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You are in a group project and realize nobody is doing their part.",
+
+        options: [
+
+            {
+                text:
+                "Organize everyone and get it done.",
+                score: 0
+            },
+
+            {
+                text:
+                "Do my part and let them handle theirs.",
+                score: 1
+            },
+
+            {
+                text:
+                "Take control because I want the result.",
+                score: 3
+            },
+
+            {
+                text:
+                "Let the project fail. Not my problem.",
+                score: 4
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You see an injured animal on the side of the road.",
+
+        options: [
+
+            {
+                text:
+                "Try to get it help.",
+                score: 0
+            },
+
+            {
+                text:
+                "Feel bad but keep going.",
+                score: 2
+            },
+
+            {
+                text:
+                "Look, but don't get involved.",
+                score: 3
+            },
+
+            {
+                text:
+                "I wouldn't feel much about it.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "A person you don't like starts crying during an argument with you.",
+
+        options: [
+
+            {
+                text:
+                "Stop and ask if they're okay.",
+                score: 0
+            },
+
+            {
+                text:
+                "Give them a moment.",
+                score: 1
+            },
+
+            {
+                text:
+                "Continue the argument.",
+                score: 3
+            },
+
+            {
+                text:
+                "Their emotions don't concern me.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You discover that someone has been taking credit for your work.",
+
+        options: [
+
+            {
+                text:
+                "Confront them calmly.",
+                score: 1
+            },
+
+            {
+                text:
+                "Report it through the proper channel.",
+                score: 0
+            },
+
+            {
+                text:
+                "Take credit for their work in return.",
+                score: 4
+            },
+
+            {
+                text:
+                "Wait and embarrass them publicly later.",
+                score: 5
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "You are given a button labeled: DO NOT PRESS.",
+
+        options: [
+
+            {
+                text:
+                "Absolutely don't press it.",
+                score: 0
+            },
+
+            {
+                text:
+                "I'm curious, but I'll leave it alone.",
+                score: 1
+            },
+
+            {
+                text:
+                "I'd probably press it eventually.",
+                score: 3
+            },
+
+            {
+                text:
+                "Press it immediately.",
+                score: 4
+            }
+
+        ]
+    },
+
+
+    {
+        question:
+        "Someone trusts you with something important that could benefit you if you betrayed them.",
+
+        options: [
+
+            {
+                text:
+                "Their trust matters more.",
+                score: 0
+            },
+
+            {
+                text:
+                "I'd be tempted but wouldn't do it.",
+                score: 1
+            },
+
+            {
+                text:
+                "Depends on how much I gain.",
+                score: 4
+            },
+
+            {
+                text:
+                "I'd take the opportunity.",
+                score: 5
+            }
+
+        ]
+    }
+
+];
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let currentQuestion = 0;
+
+let answers =
+    new Array(questions.length).fill(null);
+
+
+/* =========================================
+   START
+========================================= */
+
+function startQuiz() {
+
+    document.getElementById("intro").style.display =
+        "none";
+
+    document.getElementById("quiz").style.display =
+        "block";
+
+    currentQuestion = 0;
+
+    answers.fill(null);
+
+    showQuestion();
+
+}
+
+
+/* =========================================
+   SHOW QUESTION
+========================================= */
+
+function showQuestion(direction = "forward") {
+
+    const question =
+        questions[currentQuestion];
+
+
+    const questionElement =
+        document.getElementById("question");
+
+
+    const optionsElement =
+        document.getElementById("options");
+
+
+    const numberElement =
+        document.getElementById("questionNumber");
+
+
+    const progress =
+        document.getElementById("progressBar");
+
+
+    const prevButton =
+        document.getElementById("prevButton");
+
+
+    const nextButton =
+        document.getElementById("nextButton");
+
+
+    /* NUMBER */
+
+    numberElement.textContent =
+        `${String(currentQuestion + 1).padStart(2, "0")} / ${questions.length}`;
+
+
+    /* PROGRESS */
+
+    const progressPercent =
+        (currentQuestion /
+        (questions.length - 1)) * 100;
+
+
+    progress.style.width =
+        `${progressPercent}%`;
+
+
+    /* ANIMATION */
+
+    const area =
+        document.getElementById("questionArea");
+
+
+    area.style.animation = "none";
+
+
+    void area.offsetWidth;
+
+
+    area.style.animation =
+        direction === "back"
+            ? "questionBack .4s ease"
+            : "questionIn .4s ease";
+
+
+    /* QUESTION */
+
+    questionElement.textContent =
+        question.question;
+
+
+    /* OPTIONS */
+
+    optionsElement.innerHTML = "";
+
+
+    question.options.forEach(
+        (option, index) => {
+
+            const button =
+                document.createElement("button");
+
+
+            button.className =
+                "option";
+
+
+            button.innerHTML = `
+
+                <span class="option-letter">
+
+                    ${String.fromCharCode(65 + index)}
+
+                </span>
+
+                <span class="option-text">
+
+                    ${option.text}
+
+                </span>
+
+            `;
+
+
+            /* RESTORE SELECTED */
+
+            if (
+                answers[currentQuestion] === index
+            ) {
+
+                button.classList.add(
+                    "selected"
+                );
+
+            }
+
+
+            /*
+                Selecting an answer
+                immediately moves forward.
+            */
+
+            button.onclick = () => {
+
+                answers[currentQuestion] =
+                    index;
+
+
+                /*
+                    Small selection effect
+                    before moving.
+                */
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                setTimeout(() => {
+
+                    if (
+                        currentQuestion <
+                        questions.length - 1
+                    ) {
+
+                        currentQuestion++;
+
+                        showQuestion("forward");
+
+                    } else {
+
+                        showResult();
+
+                    }
+
+                }, 180);
+
+            };
+
+
+            optionsElement.appendChild(button);
+
+        }
+    );
+
+
+    /* PREVIOUS */
+
+    prevButton.disabled =
+        currentQuestion === 0;
+
+
+    /* NEXT */
+
+    /*
+        Since clicking an answer
+        automatically moves forward,
+        this button simply moves to
+        the next question using the
+        already-selected answer.
+    */
+
+    if (
+        currentQuestion ===
+        questions.length - 1
+    ) {
+
+        nextButton.textContent =
+            "SEE RESULT →";
+
+    } else {
+
+        nextButton.textContent =
+            "NEXT →";
+
+    }
+
+}
+
+
+/* =========================================
+   NEXT
+========================================= */
+
+function nextQuestion() {
+
+    /*
+        Require an answer.
+    */
+
+    if (
+        answers[currentQuestion] === null
+    ) {
+
+        const options =
+            document.querySelectorAll(".option");
+
+
+        options.forEach(option => {
+
+            option.style.animation =
+                "shake .25s ease";
+
+        });
+
+
+        return;
+
+    }
+
+
+    if (
+        currentQuestion <
+        questions.length - 1
+    ) {
+
+        currentQuestion++;
+
+        showQuestion("forward");
+
+    } else {
+
+        showResult();
+
+    }
+
+}
+
+
+/* =========================================
+   PREVIOUS
+========================================= */
+
+function previousQuestion() {
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        showQuestion("back");
+
+    }
+
+}
+
+
+/* =========================================
+   RESULT
+========================================= */
+
+function showResult() {
+
+    let totalScore = 0;
+
+
+    answers.forEach(
+        (answer, index) => {
+
+            if (answer !== null) {
+
+                totalScore +=
+                    questions[index]
+                    .options[answer]
+                    .score;
+
+            }
+
+        }
+    );
+
+
+    document.getElementById("quiz").style.display =
+        "none";
+
+
+    document.getElementById("result").style.display =
+        "block";
+
+
+    const maxScore =
+        questions.length * 5;
+
+
+    const percentage =
+        Math.round(
+            (totalScore / maxScore) * 100
+        );
+
+
+    document.getElementById("score").textContent =
+        percentage + "%";
+
+
+    const result =
+        getResult(percentage);
+
+
+    document.getElementById("resultTitle").textContent =
+        result.title;
+
+
+    document.getElementById("resultDescription").textContent =
+        result.description;
+
+
+    setTimeout(() => {
+
+        document.getElementById("meterFill").style.width =
+            percentage + "%";
+
+    }, 300);
+
+}
+
+
+/* =========================================
+   RESULT TYPES
+========================================= */
+
+function getResult(score) {
+
+    if (score <= 20) {
+
+        return {
+
+            title:
+                "THE EMPATH",
+
+            description:
+                "You tend to consider how your actions affect other people. Empathy and trust appear to play an important role in your decisions."
+
+        };
+
+    }
+
+
+    if (score <= 40) {
+
+        return {
+
+            title:
+                "THE BALANCED ONE",
+
+            description:
+                "You seem to move between emotion and logic depending on the situation. You can be considerate without completely ignoring your own interests."
+
+        };
+
+    }
+
+
+    if (score <= 60) {
+
+        return {
+
+            title:
+                "THE CALCULATOR",
+
+            description:
+                "You appear comfortable separating emotions from decisions. You may prioritize practical outcomes when situations become complicated."
+
+        };
+
+    }
+
+
+    if (score <= 80) {
+
+        return {
+
+            title:
+                "THE COLD STRATEGIST",
+
+            description:
+                "Your answers suggest that you tend to prioritize outcomes, self-interest, and practicality over emotional considerations."
+
+        };
+
+    }
+
+
+    return {
+
+        title:
+            "THE CHAOTIC VARIABLE",
+
+        description:
+            "Your answers leaned heavily toward detached or self-interested choices. You may enjoy testing boundaries and making decisions based on what benefits you."
+
+    };
+
+}
+
+</script>
+
+</body>
+</html>
